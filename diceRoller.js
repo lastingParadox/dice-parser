@@ -1,5 +1,5 @@
-import {Dice} from "./dice.js";
-import {Token} from "./token.js";
+const Dice = require('./dice.js');
+const Token = require('./token.js');
 
 Array.prototype.peek = function() {
     return this.slice(-1)[0];
@@ -12,7 +12,7 @@ class RollInitializeError extends Error {
     }
 }
 
-export class DiceRoller {
+class DiceRoller {
 
     #diceString = "";
     #total = 0;
@@ -256,3 +256,8 @@ export class DiceRoller {
         return this.#rollString;
     }
 }
+
+module.exports = {
+    DiceRoller,
+    RollInitializeError
+};

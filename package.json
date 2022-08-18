@@ -1,13 +1,21 @@
 {
-  "name": "diceroller",
-  "version": "1.0.0",
-  "type": "module",
-  "description": "",
+  "name": "vortox-dice-parser",
+  "version": "1.0.4",
+  "type": "commonjs",
+  "description": "A barebones dice roll expression parser.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Zander Preston <zanpres@gmail.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lastingParadox/dice-roller.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lastingParadox/dice-roller/issues"
+  },
+  "homepage": "https://github.com/lastingParadox/dice-roller#readme"
 }

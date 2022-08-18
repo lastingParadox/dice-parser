@@ -5,7 +5,7 @@ class DiceInitializeError extends Error {
     }
 }
 
-export class Dice {
+class Dice {
 
     number;
     amount;
@@ -50,3 +50,5 @@ export class Dice {
         }
     }
 }
+
+module.exports = Dice;

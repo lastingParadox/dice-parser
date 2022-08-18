@@ -14,7 +14,7 @@ const prec = {
     '-': 2
 }
 
-export class Token {
+class Token {
 
     type;
     value;
@@ -32,3 +32,5 @@ export class Token {
         return assoc[this.value];
     }
 }
+
+module.exports = Token;
