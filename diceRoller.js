@@ -202,7 +202,7 @@ class DiceRoller {
         let string = "[ "
         value.forEach((number, index) => {
             if (index !== (value.length - 1))
-                string += number + " + ";
+                string += number + ", ";
             else
                 string += number + " ";
         });

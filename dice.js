@@ -42,11 +42,17 @@ class Dice {
     }
 
     calculate() {
-        for (let i = 0; i < this.number; i++) {
-            let rollAmount = Math.floor(Math.random() * this.amount) + 1;
+        if (this.amount === 0) {
+            this.dieRolls.push(0)
+            this.total = 0;
+        }
+        else {
+            for (let i = 0; i < this.number; i++) {
+                let rollAmount = Math.floor(Math.random() * this.amount) + 1;
 
-            this.dieRolls.push(rollAmount);
-            this.total += rollAmount;
+                this.dieRolls.push(rollAmount);
+                this.total += rollAmount;
+            }
         }
     }
 }
