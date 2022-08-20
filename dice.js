@@ -11,6 +11,8 @@ class Dice {
     amount;
     total = 0;
     dieRolls = [];
+    low = 0;
+    high = 0;
 
     constructor (roll) {
 
@@ -45,9 +47,14 @@ class Dice {
         if (this.amount === 0) {
             this.dieRolls.push(0)
             this.total = 0;
+            this.low = 0;
+            this.high = 0;
         }
         else {
             for (let i = 0; i < this.number; i++) {
+                this.low += 1;
+                this.high += this.amount;
+
                 let rollAmount = Math.floor(Math.random() * this.amount) + 1;
 
                 this.dieRolls.push(rollAmount);

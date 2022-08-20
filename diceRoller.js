@@ -23,13 +23,15 @@ class DiceRoller {
 
     #diceString = "";
     #total = 0;
+    #min = 0;
+    #max = 0;
     #tokenArray = [];
     #postFixArray = [];
     #rollArray = [];
     #rollString = "";
 
     constructor(diceString) {
-        this.diceString = diceString;
+        this.#diceString = diceString;
 
         this.#tokenArray = this.#tokenize();
         this.#postFixArray = this.#parse();
@@ -85,9 +87,9 @@ class DiceRoller {
         let result = [];
         let buffer = [];
 
-        let expression = this.diceString.replace(/\s+/g, "").split("");
+        let expression = this.#diceString.replace(/\s+/g, "").split("");
 
-        expression.forEach((char) => {
+        expression.forEach((char, index) => {
             if (DiceRoller.#isDigit(char) || DiceRoller.#isD(char) || DiceRoller.#isPoint(char)) {
                 buffer.push(char);
             }
@@ -97,7 +99,12 @@ class DiceRoller {
                 buffer = [];
 
                 if (DiceRoller.#isOperator(char))
-                    result.push(new Token("Operator", char));
+                    if (char === '-' && index === 0)
+                        buffer.push(char);
+                    else if (char === '-' && index > 0 && DiceRoller.#isOperator(expression[index - 1]))
+                        buffer.push(char)
+                    else
+                        result.push(new Token("Operator", char));
                 else {
                     if (DiceRoller.#isLeftParenthesis(char)) {
                         result.push(new Token("Operator", '*'));
@@ -162,34 +169,59 @@ class DiceRoller {
 
     #evalPostFix() {
         let stack = [];
+        let minStack = [];
+        let maxStack = [];
 
         this.#postFixArray.forEach((token) => {
             if (isNaN(token.value)) {
                 if (token.type === "Dice") {
                     let roll = new Dice(token.value);
+                    minStack.push(parseFloat(roll.low));
+                    maxStack.push(parseFloat(roll.high));
                     stack.push(parseFloat(roll.total));
                     this.#rollArray.push(roll.dieRolls);
                 }
                 else {
                     let x = stack.pop();
+                    let minX = minStack.pop();
+                    let maxX = maxStack.pop();
                     if (DiceRoller.#isOperator(token.value)) {
                         let y = stack.pop();
-                        if (token.value === '+')
+                        let minY = minStack.pop();
+                        let maxY = maxStack.pop();
+                        if (token.value === '+') {
                             stack.push(y + x);
-                        else if (token.value === '-')
+                            minStack.push(minY + minX);
+                            maxStack.push(maxY + maxX);
+                        }
+                        else if (token.value === '-') {
                             stack.push(y - x);
-                        else if (token.value === '*')
+                            minStack.push(minY - minX);
+                            maxStack.push(maxY - maxX);
+                        }
+                        else if (token.value === '*') {
                             stack.push(y * x);
-                        else if (token.value === '/')
+                            minStack.push(minY * minX);
+                            maxStack.push(maxY * maxX);
+                        }
+                        else if (token.value === '/') {
                             stack.push(y / x);
-                        else if (token.value === '^')
+                            minStack.push(minY / minX);
+                            maxStack.push(maxY / maxX);
+                        }
+                        else if (token.value === '^') {
                             stack.push(Math.pow(y, x));
+                            minStack.push(Math.pow(minY, minX));
+                            maxStack.push(Math.pow(maxY, maxX));
+                        }
                         this.#rollArray.push(token.value)
                     }
                 }
             }
             else {
                 stack.push(parseFloat(token.value));
+                minStack.push(parseFloat(token.value));
+                maxStack.push(parseFloat(token.value));
                 this.#rollArray.push(parseFloat(token.value));
             }
 
@@ -198,12 +230,15 @@ class DiceRoller {
         let returnValue = null;
         while(stack.length > 0) {
             let element = stack.pop();
+            let minElement = minStack.pop();
+            let maxElement = maxStack.pop();
             if (!isNaN(element)) {
                 returnValue = element;
+                this.#min = minElement;
+                this.#max = maxElement;
                 if (returnValue === Infinity || returnValue === -Infinity || returnValue === null)
                     throw new InfinityError("Unable to parse expression, value is infinity.");
             }
-
         }
 
         return returnValue;
@@ -213,11 +248,11 @@ class DiceRoller {
         let string = "[ "
         value.forEach((number, index) => {
             if (index !== (value.length - 1))
-                string += number + ", ";
+                string += number + ",";
             else
-                string += number + " ";
+                string += number + "";
         });
-        string += "]";
+        string += " ]";
         return string;
     }
 
@@ -261,6 +296,14 @@ class DiceRoller {
 
     getTotal() {
         return this.#total;
+    }
+
+    getMin() {
+        return this.#min;
+    }
+
+    getMax() {
+        return this.#max;
     }
 
     getRollString() {
