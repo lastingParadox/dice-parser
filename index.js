@@ -1,7 +1,7 @@
-const { DiceRoller } = require('./diceRoller.js');
-const { RollInitializeError } = require("./diceRoller.js");
+const { DiceRoller, RollInitializeError, InfinityError } = require('./diceRoller.js');
 
 module.exports = {
     DiceRoller,
-    RollInitializeError
+    RollInitializeError,
+    InfinityError
 }

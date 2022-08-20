@@ -12,6 +12,13 @@ class RollInitializeError extends Error {
     }
 }
 
+class InfinityError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = InfinityError;
+    }
+}
+
 class DiceRoller {
 
     #diceString = "";
@@ -191,8 +198,12 @@ class DiceRoller {
         let returnValue = null;
         while(stack.length > 0) {
             let element = stack.pop();
-            if (!isNaN(element))
+            if (!isNaN(element)) {
                 returnValue = element;
+                if (returnValue === Infinity || returnValue === -Infinity || returnValue === null)
+                    throw new InfinityError("Unable to parse expression, value is infinity.");
+            }
+
         }
 
         return returnValue;
@@ -259,5 +270,6 @@ class DiceRoller {
 
 module.exports = {
     DiceRoller,
-    RollInitializeError
+    RollInitializeError,
+    InfinityError
 };

@@ -1,6 +1,6 @@
 {
   "name": "vortox-dice-parser",
-  "version": "1.0.5",
+  "version": "1.1.1",
   "type": "commonjs",
   "description": "A barebones dice roll expression parser.",
   "main": "index.js",
